@@ -27,7 +27,7 @@ fs.createReadStream(inputFileName)
 
     count++;
 
-    if (count >= 5000) {
+    if (count === 5000) {
       writeJsonToOutput(outputArr)
       count = 0;
       fileIndex++;
