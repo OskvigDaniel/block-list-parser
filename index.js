@@ -1,9 +1,13 @@
 const fs = require("fs");
 const { parse } = require("csv-parse");
 
-const outputArr = [];
+const inputFileName = "./blocklist.csv"
 
-fs.createReadStream("./blocklist.csv")
+let outputArr = [];
+let count = 0;
+let fileIndex = 0;
+
+fs.createReadStream(inputFileName)
   .pipe(parse({ delimiter: ",", from_line: 2 }))
   .on("data", function (row) {
     outputArr.push({
@@ -12,9 +16,23 @@ fs.createReadStream("./blocklist.csv")
             "name": row[1],
             "screen_name": row[1]
         },
-        "reason": -1,
+        "reason": 0,
     })
+
+    count++;
+
+    if (count >= 5000) {
+      writeJsonToOutput(outputArr)
+      count = 0;
+      fileIndex++;
+      outputArr = [];
+    }
   })
   .on("end", function () {
-    fs.writeFileSync("output.json", JSON.stringify(outputArr))
+    writeJsonToOutput(outputArr)
   })
+
+
+function writeJsonToOutput(outputArr) {
+  fs.writeFileSync(`output/output-${fileIndex}.json`, JSON.stringify(outputArr))
+}
