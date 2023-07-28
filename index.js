@@ -16,6 +16,10 @@ if (!fs.existsSync(dir)){
 fs.createReadStream(inputFileName)
   .pipe(parse({ delimiter: ",", from_line: 2 }))
   .on("data", function (row) {
+    if (row[2]) {
+      return
+    }
+
     outputArr.push({
         "user_id": row[0],
         "user": {
