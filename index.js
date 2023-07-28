@@ -7,6 +7,12 @@ let outputArr = [];
 let count = 0;
 let fileIndex = 0;
 
+const dir = './output';
+
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
+
 fs.createReadStream(inputFileName)
   .pipe(parse({ delimiter: ",", from_line: 2 }))
   .on("data", function (row) {
